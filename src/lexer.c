@@ -4,24 +4,11 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <mytype.h>
-typedef int token_t;
 #include <tokens.h>
-enum {
-	ID = 0x10000,
-	UINT,
-	FLTP,
-	GEQ,
-	LEQ,
-	NEQ,
-	ASGN,
-};
 #include <lexer.h>
-token_t iskeyword(const char *);
-#define MAXIDLEN 0x100
-size_t linenumber = 1;
-extern char lexeme[MAXIDLEN + 1];
 
 char            lexeme[MAXIDLEN + 1];
+size_t			linenumber = 1;
 
 token_t ignoreneutrals(FILE * tape)
 {
@@ -51,47 +38,50 @@ _ignoreneutrals_start:
 
 token_t isASGN(FILE * tape)
 {
-	if ( (lexeme[0] = getc(tape)) == ':' ) {
-		if ( (lexeme[1] = getc(tape)) == '=' ) {
-			lexeme[2] = 0;
+	/*eu pensei que não era pra por número hardcoded no código...?*/
+	int i;
+	if ( (lexeme[i = 0] = getc(tape)) == ':' ) {
+		if ( (lexeme[++i] = getc(tape)) == '=' ) {
+			lexeme[i+1] = 0;
 			return ASGN;
 		}
-		ungetc(lexeme[1], tape);
+		ungetc(lexeme[i], tape);
 	}
-	ungetc(lexeme[0], tape);
-	return lexeme[0] = 0;
+	ungetc(lexeme[--i], tape);
+	return lexeme[i] = 0;
 }
 
 token_t isRELOP(FILE * tape)
 {
-	switch (lexeme[0] = getc(tape)) {
+	int i;
+	switch (lexeme[i = 0] = getc(tape)) {
 	case'<':
-		lexeme[1] = getc(tape);
-		lexeme[2] = 0;
-		switch (lexeme[1]) {
+		lexeme[++i] = getc(tape);
+		lexeme[i+1] = 0;
+		switch (lexeme[i]) {
 		case'=':
 			return LEQ;
 		case'>':
 			return NEQ;
 		}
-		ungetc(lexeme[1], tape);
-		lexeme[1] = 0;
-		return lexeme[0];
+		ungetc(lexeme[i], tape);
+		lexeme[i] = 0;
+		return lexeme[--i];
 	case'>':
-		lexeme[1] = getc(tape);
-		if (lexeme[1] == '=') {
-			lexeme[2] = 0;
+		lexeme[++i] = getc(tape);
+		if (lexeme[i] == '=') {
+			lexeme[i+1] = 0;
 			return GEQ;
 		} 
-		ungetc(lexeme[1], tape);
-		lexeme[1] = 0;
-		return lexeme[0];
+		ungetc(lexeme[i], tape);
+		lexeme[i] = 0;
+		return lexeme[--i];
 	case'=':
-		lexeme[1] = 0;
-		return lexeme[0];
+		lexeme[i+1] = 0;
+		return lexeme[i];
 	}
-	ungetc(lexeme[0], tape);
-	return lexeme[0] = 0;
+	ungetc(lexeme[i], tape);
+	return lexeme[i] = 0;
 }
 
 token_t isID(FILE * tape)
