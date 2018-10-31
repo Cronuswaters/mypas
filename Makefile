@@ -14,9 +14,7 @@ default:
 
 clean:
 	(cd $(codesdir); make $@ )
-	(cd $(includedir); make $@ )
 
 mostlyclean:
 	(cd $(codesdir); make $@ )
-	(cd $(includedir); make $@ )
 

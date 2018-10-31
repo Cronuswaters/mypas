@@ -91,7 +91,7 @@ token_t isID(FILE * tape)
 
     if (isalpha(lexeme[i] = getc(tape))) {
         i++;
-        while (isalnum(lexeme[i] = getc(tape)))
+        while ((isalnum(lexeme[i] = getc(tape))) || (lexeme[i] == '_'))
             i++;
         ungetc(lexeme[i], tape);
         lexeme[i] = 0;

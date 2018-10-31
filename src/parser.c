@@ -5,6 +5,7 @@
 #include <tokens.h>
 #include <mytype.h>
 #include <errcodes.h>
+#include <lexer.h>
 #include <parser.h>
 
 token_t lookahead;
@@ -40,10 +41,9 @@ _procmodel_start:
         procmodel();
         goto _procmodel_start;
     }
-_funcmodel_start:
     if(lookahead == FUNCTION){
         funcmodel();
-        goto _funcmodel_start;
+        goto _procmodel_start;
     }
 }
 
@@ -67,6 +67,7 @@ void vargroup(void){
     varlist();
     match(':');
     typemodif();
+	match(';');
 }
 
 /***************************************************************************
@@ -117,7 +118,7 @@ void procmodel(void){
 	match(';');
 	header();
 	body();
-	match(;);
+	match(';');
 }
 
 /***************************************************************************
@@ -220,11 +221,14 @@ void stmt(void){
 		repstmt();
 		break;
 	case '+':
-	case '-'
+	case '-':
+	case '(':
+	case NOT:
 	case ID:
 	case UINT:
 	case FLTP:
-	case '(':
+	case TRUE:
+	case FALSE:
 		smpexpr();
 		break;
 	default:
@@ -373,6 +377,7 @@ void factor(void){
 		} else if(lookahead == '('){
 			match(lookahead);
 			exprlist();
+			match(')');
 		}
 		break;
 	case UINT:
@@ -405,7 +410,7 @@ void match(token_t expected){
 	if(lookahead == expected){
 		lookahead = gettoken(source);
 	} else{
-		fprintf(stderr, "ERROR: Token Mismatch\n");
+		fprintf(stderr, "ERROR: Token Mismatch at line %d\n",linenumber);
 		exit(ERR_TOKEN_MISMATCH);
 	}
 }

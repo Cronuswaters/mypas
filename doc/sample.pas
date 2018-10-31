@@ -32,10 +32,10 @@ program pas_sample_2018_10_10;
 			end;
 
 		procedure A;
-			var bla_bla_bla: file;
+			var bla_bla_bla: real;
 
-			function B: text;
-				var a: file;
+			function B: double;
+				var a: real;
 				begin
 					blablabla(a)
 				end;

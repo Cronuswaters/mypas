@@ -8,7 +8,7 @@ projectname=mypas
 
 includedir=../include/
 
-execdir=../bin/
+execdir=../bin/mypas
 
 execpath=$(execdir)$(project)
 
@@ -36,7 +36,7 @@ $(execpath): $(ofiles)
 	$(CC)	-o $@	$^
 
 clean:
-	$(RM) $(ofiless)
+	$(RM) $(ofiles)
 
 mostlyclean: clean
 	$(RM) *.tmp *~
