@@ -32,9 +32,10 @@ char *keyword[] = {
 };
 
 token_t iskeyword(const char *symbol){
-  for(int i = 0; keyword[i]; i++){
-    if(!strcmp(keyword[i], symbol)) return BEGIN + i;
-  }
-  return 0;
+    int i;
+    for(i = 0; keyword[i]; i++){
+        if(!strcmp(keyword[i], symbol)) return BEGIN + i;
+    }
+    return 0;
 }
-      
+

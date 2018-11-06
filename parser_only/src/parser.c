@@ -410,7 +410,7 @@ void match(token_t expected){
 	if(lookahead == expected){
 		lookahead = gettoken(source);
 	} else{
-	  fprintf(stderr, "ERROR: Token Mismatch at line %d, column %d\n",linenumber,colnumber);
+	  fprintf(stderr, "ERROR: Token Mismatch at line %ld, column %ld\n",linenumber,colnumber);
 		exit(ERR_TOKEN_MISMATCH);
 	}
 }
