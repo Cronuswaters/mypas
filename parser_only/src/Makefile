@@ -16,19 +16,13 @@ cfiles=\
        mypas.c\
        lexer.c\
        parser.c\
-       keywords.c\
-       symtab.c\
-       typecheck.c\
-       pseudocode.c
+       keywords.c
 
 ofiles=\
        mypas.o\
        lexer.o\
        parser.o\
-       keywords.o\
-       symtab.o\
-       typecheck.o\
-       pseudocode.o
+       keywords.o
 
 CFLAGS=-g -I$(includedir)
 
