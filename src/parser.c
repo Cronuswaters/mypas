@@ -20,11 +20,6 @@ Production Rules::
 
 mypas -> PROGRAM ID ; header body .
 
-	  --------			  ---------			 -------		 ------		  -----		 -------
-    |         |		     |         |		|		|		|      |	 |	   |	|		|
-->-   PROGRAM  --->------    ID    --->---      ;    --->--- header -->--  body -->-    .    ------->-
-	|         |			 |         |		|		|		|	   |     |	   |	|		|
-	  --------			  ---------			 -------		 ------		  -----		 -------
 ***************************************************************************/
 void mypas(void)
 {
@@ -40,21 +35,6 @@ Declarative scope::
 
 header -> varmodel { procmodel | funcmodel }
 
-						------------------------------<-------------
-					   |											|
-					   |											^
-	 --------		   v	        ---------						|
-	|         |		   |           |         |						|
----   varmodel  --->--------------  procmodel  ------				|
-	|         |		   |           |         |		  \				|
-	  --------		   |            ----------		   \			|
-	                   v								\			|
-					   |								 ------->------->----
-					   |		    ---------		    /
-					   \		  |		     |		   / 
-					     ------>--  funcmodel --------
-								  |		     |
-								   ----------
 ***************************************************************************/
 void header(void){
     varmodel();
@@ -73,22 +53,6 @@ _procmodel_start:
 
 varmodel -> [ VAR  vargroup { vargroup } ]
 
----------->----->----->----->---------------------->--------------->--->-
-			   |											  |
-			   |											  ^
-			   |											  |
-			   v											  ^
-			   |											  |
-			   |		   --------		         ------		  |
-				\		  |		    |		   |		|     |
-				 ------>--   VAR	  --------  vargroup -----
-						  |		    |	|	   |		|	|
-						   ----------	|		--------	|
-										^					v
-										|					|
-										|					v
-					                     \					|
-										   --<----<----------
 ***************************************************************************/
 void varmodel(void){
 	if(lookahead == VAR){
@@ -102,11 +66,6 @@ _vargroup_start:
 
 vargroup -> varlist : typemodif ;
 
-	       ---------			--------       --------		      ------
-		  |		    |		   |		|     |		   |		 |		|
- ------>--  varlist	  -->-----      :    -->-  typemodif -->----    ;    -->--
-		  |		    |		   |		|	  |		   |		 |		|
-		   ----------			--------	   -------		      ------
 ***************************************************************************/
 void vargroup(void){
     varlist();
@@ -119,18 +78,6 @@ void vargroup(void){
 
 varlist -> ID { , ID }
 
-  ----------<-------------------------
- |					   				  |
- |					   			      ^
- |	 --------		      -------	  |
- |	|         |		     |	     |	  |	
----      ID    --->------    ,   -->--------->--
-	|         |		 |   |       |		|
-	  --------		 |    -------		^
-	                 |					|
-                     v					^
-					 |                  |
-					  ------------------
 ***************************************************************************/
 void varlist(void){
 _varlist_start:
@@ -169,11 +116,6 @@ void typemodif(void){
 
 procmodel -> PROCEDURE ID formalparams ; header body ;
 
-	  --------			  ---------			 ---------------		 ------		   ------	   ------		 ------
-	|         |		     |         |		|			   |		|      |	 |	     |	  |		 |		|	   |
----  PROCEDURE  --->-----    ID    --->---    formalparams	--->---    ;    -->--  header -->-  body   ----     ;  |
-	|         |			 |         |		|			   |		|	   |     |	     |	  |		 |		|	   |
-	  --------			  ----------		 ---------------		 ------		  ------	   ------        ------
 ***************************************************************************/
 void procmodel(void){
 	match(PROCEDURE);
@@ -189,11 +131,6 @@ void procmodel(void){
 
 funcmodel -> FUNCTION ID formalparams : typemodif ; header body ;
 
-	  --------			  ---------			 ---------------		 ------		   ---------	   ------		 ------		 ------      ------
-	|         |		     |         |		|			   |		|      |	 |			|	  |		 |		|	   |	|	   |    |      |
----   FUNCTION  --->-----    ID    --->---    formalparams	--->---    :    -->--  typemodif -->-   ;      ----  header -->-  body  -->-   ;   |
-	|         |			 |         |		|			   |		|	   |     |			|	  |		 |		|	   |	|	   |    |      |
-	  --------			  ----------		 ---------------		 ------		  ----------	   ------        ------		 ------      ------
 ***************************************************************************/
 void funcmodel(void){
 	match(FUNCTION);
@@ -211,16 +148,6 @@ void funcmodel(void){
 
 formalparams -> [ ( arglist ) ]
 
- 	 --------		      -------		 -------
- 	|         |		     |	      |		|		|
----      (    --->------   arglist  -->		)	 ->------->-->----
- |	|         |			 |        |		|		|		|
- |	  --------			  --------		 -------		|
- |														^	
- |														|
- v														^	
- |														|
-  -------------------->-------->-------------------->---
 ***************************************************************************/
 void formalparams(void){
 	if(lookahead == '('){
@@ -233,18 +160,7 @@ void formalparams(void){
 /***************************************************************************
 
 arglist -> argmodel { ; argmodel }
-  ----------<--------------------------
- |					   				  |
- |					   			      ^
- |	 --------		      -------	  |
- |	|         |		     |	     |	  |	
----   argmodel --->------    ,   -->--------->--
-	|         |		 |   |       |		|
-	  --------		 |    -------		^
-	                 |					|
-                     v					^
-					 |                  |
-					  -------------------
+
 ***************************************************************************/
 void arglist(void){
 _arglist_start:
@@ -259,16 +175,6 @@ _arglist_start:
 
 argmodel -> [ VAR ] varlist : typemodif
 
-							 -------		 -------         -------		 --------
-							|		|       |       |		|		|		|		 |
--->------->-->------->-----  varlist --->--- varlist ->-----    :    --->--- typemodif--->-
-	|				  |		|		|       |       |		|		|		|		 |
-	|				  |		 --------        -------		 -------		 --------
-	V	 --------	  ^
-	|	|         |	  |
-	--     VAR     ----
-		|         |
-	     --------
 ***************************************************************************/
 void argmodel(void){
 	if(lookahead == VAR) match(VAR);
@@ -282,11 +188,6 @@ Imperative scope::
 
 body -> BEGIN stmtlist END
 
-	  --------		   --------			 ------
-	|         |		  |		   |        |	   |
----    BEGIN    -->---  stmtlist --->---   END  ------->--------
-	|         |		  |		   |        |	   |
-	  --------         --------			 ------
 ***************************************************************************/
 void body(void){
 	match(BEGIN);
@@ -298,18 +199,6 @@ void body(void){
 
 stmtlist -> stmt { ; stmt }
 
-    ------
-   |      |
----  stmt  ->------->---
- | |      |  |
- |  ------   |
- |	         v
- |  		 |
- ^		   ------
- |		  |      |
-  --<-----   ;   |
-		  |      |
-		   ------
 ***************************************************************************/
 void stmtlist(void){
 _stmtlist_start:
@@ -323,14 +212,15 @@ _stmtlist_start:
 /***************************************************************************
 
 stmt ->   body
-| ifstmt
-| whlstmt
-| repstmt
-| smpexpr
-| <empty>
+	| ifstmt
+	| whlstmt
+	| repstmt
+	| smpexpr
+	| <empty>
 ***************************************************************************/
 void stmt(void){
 	switch(lookahead){
+	// MyPas Keywords
 	case BEGIN:
 		body();
 		break;
@@ -343,100 +233,143 @@ void stmt(void){
 	case REPEAT:
 		repstmt();
 		break;
+	// Unary operators:
 	case '+':
 	case '-':
-	case '(':
 	case NOT:
+	// first for variables, functions, procedures
 	case ID:
+	// first for constants
 	case UINT:
 	case FLTP:
 	case TRUE:
 	case FALSE:
+	// parentheses
+	case '(':
 		smpexpr();
 		break;
 	default:
+		// Default abstracts an empty statement
 		break;
 	}
 }
 
 /***************************************************************************
 
-ifstmt -> IF expr THEN stmt [ ELSE stmt ]
+ifstmt ->			|| <ifstmt>.as <-
+		IF expr		||	<expr>.as
+		THEN		||	"GOFALSE .L <<_lbl_endif = _lbl_else = loopcount++>>"
+		stmt		||	<stmt>.as
+		[ ELSE stmt ]	||	"JMP .L <<_lbl_endif = loopcount++>>
+				|| ".L <<_lbl_else>>"
+				||	<stmt>.as
+				|| ".L <<_lbl_endif>>"
 
-     ------         --------         ------         ------
-    |      |       |        |       |      |       |      |
-----   IF   --->---   expr   --->---  THEN  --->---  stmt  ----->--------->-------->------------>----
-    |      |       |        |       |      |       |      |        |                          |
-	 ------         --------         ------         ------         |                          |
-	                                                               v                          |
-																   |                          ^
-																   |                          |
-																 ------         ------        |
-																|      |       |      |       |
-																| ELSE  --->---  stmt  ---->--
-															    |      |       |      |
-															     ------         ------
 ***************************************************************************/
+// TODO: Make functions for other pseudocodes
+// TODO: swap printfs for function calls from pseudocode
+// TODO: Move all these up
+size_t loopcount = 1;
+#define loopalloc loopcount++
+#include <pseudocode.h>
+// pseudocode.h
+void gofalse(size_t);
+void jmp(size_t);
+void mklabel(size_t);
+// pseudocode.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <pseudocode.h>
+
+void gofalse(size_t label){
+	printf("\tGOFALSE .L %ld\n",label);
+}
+
 void ifstmt(void){
+	/* 0 */
+	size_t _lbl_else, _lbl_endif;
+	/* 0' */
 	match(IF);
 	expr();
 	match(THEN);
+	/* 1 */
+	//printf("\tGOFALSE .L %ld\n",_lbl_endif = _lbl_else = loopalloc);
+	gofalse(_lbl_endif = _lbl_else = loopalloc);
+	/* 1' */
 	stmt();
 	if(lookahead == ELSE){
 		match(ELSE);
+		/* 2 */
+		printf("\tJMP .L %ld\n",_lbl_endif = loopalloc);
+		printf(".L %ld\n",_lbl_else);
+		/* 2' */
 		stmt();
 	}
+	/* 3 */
+	printf(".L %ld\n",_lbl_endif);
+	/* 3' */
 }
 
 /***************************************************************************
 
-whlstmt -> WHILE expr DO stmt
+whlstmt ->			|| <whlstmt>.as <-
+		WHILE expr DO	|| ".L <<_whilehead = loopcount++>>
+		stmt		||	<expr>.as
+				||	"GOFALSE .L <<_whiletail = loopcount++>>
+				||	<stmt>.as
+				||	"JMP .L <<_whilehead>>
+				|| ".L <<_whiletail>>
 
-    -------         ------         ------         ------
-   |       |       |      |       |      |       |      |
----  WHILE  --->---  expr  --->---   DO   --->---  stmt  ------>------
-   |       |       |      |       |      |       |      |
-    -------         ------         ------         ------
 ***************************************************************************/
 void whlstmt(void){
+	/* 0 */
+	size_t _whilehead, _whiletail;
+	/* 0' */
 	match(WHILE);
+	/* 1 */
+	printf(".L %ld\n", _whilehead = loopalloc);
+	/* 1' */
 	expr();
+	/* 2 */
+	printf("\tGOFALSE .L %ld\n", _whiletail = loopalloc);
+	/* 2' */
 	match(DO);
 	stmt();
+	/* 3 */
+	printf("\tJMP .L %ld\n", _whilehead);
+	printf(".L %ld\n", _whiletail);
+	/* 3' */
 }
 
 /***************************************************************************
 
-repstmt -> REPEAT stmtlist UNTIL expr
+repstmt ->		|| <repstmt>.as
+	REPEAT		|| ".L <<_rephead = loopcount++>>
+	stmtlist	||	<stmtlist>.as
+	UNTIL expr	||	<expr>.as
+			||	"GOFALSE .L <<_rephead>>"
 
-    ------         --------         -------         ------
-   |      |       |        |       |       |       |      |
---- REPEAT --->--- stmtlist --->---  UNTIL  --->---  expr  ------>------
-   |      |       |        |       |       |       |      |
-    ------         --------         -------         ------
 ***************************************************************************/
 void repstmt(void){
+	/* 0 */
+	size_t _rephead;
+	/* 0' */
 	match(REPEAT);
+	/* 1 */
+	printf(".L %ld\n", _rephead = loopalloc);
+	/* 1' */
 	stmtlist();
 	match(UNTIL);
 	expr();
+	/* 2 */
+	printf("\tGOFALSE .L %ld\n", _rephead);
+	/* 2' */
 }
 
 /***************************************************************************
 
 expr -> smpexpr [ relop smpexpr ]
 
-    -------
-   |       |
---- smpexpr --->-------->------->-------->------->-----
-   |       |    |                              |
-	-------		v                              ^
-				|                              |
-			 -------         -------           |
-			|       |       |       |          |
-			  relop  --->--- smpexpr ----->----
-			|       |       |       |
-			 -------         -------
 ***************************************************************************/
 void expr(void){
 	smpexpr();
@@ -494,18 +427,6 @@ void relop(void){
 
 smpexpr -> [neg] term { oplus term }		neg = '+' | '-' | NOT		oplus= '+' | '-' | OR
 
-    -----         ------
-   |     |       |      |
----  neg  --->---  term  --->-------->------>-----
- | |     |  |  | |      |     |
- |  -----   ^  |  ------      |
- v          |  |              v
- |			|  |              |
-  ----------   ^			-------
-			   |		   |       |
-				-----<-----	 oplus |
-				           |       |
-						    -------
 ******************************************************************************************************/
 void smpexpr(void){
 	if(lookahead == '+' || lookahead == '-' || lookahead == NOT) match(lookahead);
@@ -522,18 +443,6 @@ _oplus_check:
 
 term -> factor { otimes factor }     otimes= '*' | '/' | DIV | MOD | AND
 
-    ------
-   |      |
---- factor --->---------->-----
- | |      |      |
- |  ------       |
- |	             v
- |				 |
- ^		     --------
- |		    |	     |
-  -----<----  otimes |
-			|        |
-			 --------
 ***************************************************************************/
 void term(void){
 	factor();
@@ -581,18 +490,6 @@ void factor(void){
 
 exprlist -> expr { , expr }
 
-    ------
-   |      |
----  expr  ---->-------->----------
- | |      |      |
- |  ------       |
- |               v
- |               |
- ^             ------
- |            |      |
-  ------<-----   ,   |
-			  |      |
-			   ------
 ***************************************************************************/
 void exprlist(void){
 _exprlist_start:
