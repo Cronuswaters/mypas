@@ -1,18 +1,53 @@
 /**@<mypas.c>::**/
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <lexer.h>
 #include <parser.h>
+#include <pseudocode.h>
 #include <errcodes.h>
 
-FILE *source;
+#define NUM_EXTENSIONS 3
+
+const char *extensions[] = {".pas", ".mypas", ".npas"};
+//const char *arg = "-o";
 
 int main(int argc, char *argv[]){
-	if(argc == 1) printf("Please specify a file to open");
+	int i, j;
+	char *objpath = 0, *srcpath = 0;
+	if(argc == 1) printf("Please specify a file to open\n");
 	else{
-		source = fopen(argv[1], "r");
-		if(source == NULL){
-		        fprintf(stderr, "Error opening file %s.\n",argv[1]);
+		for(i = 1; i < argc; i++){
+			if(!strcmp(argv[i], "-o")){ /*if(argv[i] == "-o"){*/
+				//i++;
+				//strcpy(objpath, argv[i]);
+				objpath = argv[++i];
+			}
+			else{
+				for(j = 0; j < NUM_EXTENSIONS; j++){
+					if(strstr(argv[i], extensions[j]) != NULL){
+						//strcpy(srcpath, argv[i]);
+						srcpath = argv[i];
+						break;
+					}
+				}
+			}
+		}
+		if(srcpath != 0){
+			source = fopen(srcpath, "r");
+			if(source == NULL){
+				fprintf(stderr, "Error opening source file %s.\n",srcpath);
+				exit(ERR_FILE_ERROR);
+			}
+		}else{
+			fprintf(stderr, "Could not open source file: File is not a valid Pascal source file.\n");
+			exit(ERR_INVALID_FILE);
+		}
+		
+		if(objpath == 0) strcpy(objpath, "a.out");
+		object = fopen(objpath, "w");
+		if(object == NULL){
+			fprintf(stderr, "Error opening object file %s.\n", objpath);
 			exit(ERR_FILE_ERROR);
 		}
 
