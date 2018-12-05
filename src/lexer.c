@@ -8,6 +8,8 @@
 #include <errcodes.h>
 #include <lexer.h>
 
+#define FLOAT_LIMIT 16777216
+
 char            lexeme[MAXIDLEN + 1];
 size_t		linenumber = 1;
 size_t          colnumber = 1;
@@ -236,6 +238,10 @@ token_t isNUM(FILE *tape){
     i0 = i;
     i = chkEE(tape, i);
     if(i != i0 && token == UINT) token = FLTP;
+    if(token == FLTP){
+        float num = (float)atof(lexeme);
+        if((num < FLOAT_LIMIT * -1) || (num > FLOAT_LIMIT)) token = DBLPT;
+    }
     return token;
 }
 

@@ -1,0 +1,17 @@
+	jz .L 1
+	push %accl
+	push %accl
+	lmul %accl, %(spl)
+	jmp .L 2
+.L 1
+.L 3
+	jz .L 4
+.L 5
+	push %accl
+	push %accl
+	cvltof %accl, %accf
+	fdiv %accf, %(spf)
+	jz .L 5
+	jmp .L 3
+.L 4
+.L 2

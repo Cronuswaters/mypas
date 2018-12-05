@@ -4,6 +4,7 @@ extern token_t lookahead;
 extern FILE *source;
 
 void match(token_t expected);
+void token_mismatch(token_t, token_t);
 void mypas(void);
 void header(void);
 void body(void);
@@ -21,8 +22,8 @@ void stmt(void);
 void ifstmt(void);
 void whlstmt(void);
 void repstmt(void);
-void expr(void);
-void relop(void);
+int expr(void);
+int relop(void);
 int smpexpr(int);
 int term(int);
 int factor(int);

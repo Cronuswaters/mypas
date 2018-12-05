@@ -10,7 +10,7 @@
 #define NUM_EXTENSIONS 3
 
 const char *extensions[] = {".pas", ".mypas", ".npas"};
-//const char *arg = "-o";
+const char *default_obj = "a.out";
 
 int main(int argc, char *argv[]){
 	int i, j;
@@ -43,9 +43,9 @@ int main(int argc, char *argv[]){
 			fprintf(stderr, "Could not open source file: File is not a valid Pascal source file.\n");
 			exit(ERR_INVALID_FILE);
 		}
-		
-		if(objpath == 0) strcpy(objpath, "a.out");
-		object = fopen(objpath, "w");
+
+		if(objpath == 0) objpath = "a.out";//strcpy(objpath, default_obj);
+		object = fopen(objpath, "wt");
 		if(object == NULL){
 			fprintf(stderr, "Error opening object file %s.\n", objpath);
 			exit(ERR_FILE_ERROR);
